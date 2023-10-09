@@ -1,0 +1,469 @@
+{% extends "reagency/layout.html" %}
+{% load static %}
+
+{% block title %}Listing Speciialist{% endblock %}
+
+
+{% block body %}
+{% block script %}
+<script src="{% static 'reagency/listingspecialist.js' %}"></script>
+{% endblock %}
+
+    <!-- <div class="scoutedListing">
+        <h4>Scouted Properties</h4>
+    </div> -->
+
+    <!-- if user is a listing specialist -->
+    {% if listing_specialist %}
+        <!-- Toggle view Buttons -->
+        <!-- <button class="btn btn-sm btn-outline-primary" id="newScouted">Add New Scouted</button>
+        <button class="btn btn-sm btn-outline-primary" id="new">Scouted Properties</button>
+        <button class="btn btn-sm btn-outline-primary" id="pending">Accepted Properties</button>
+        <button class="btn btn-sm btn-outline-primary" id="active">Rejected Properties</button> -->
+        
+        <div id="scoutListings">
+            <h3>Pending Scouted Properties</h3>
+
+            {% if scout_listings %}
+            <div class="row mx-5 ">
+                {% for listing in scout_listings %}
+            
+                <div class="card listingCard mx-3 my-3" style="width: 18rem;height: max-content;">
+            
+                    <div class="imageCont">
+                        <h5>House Pic:</h5>
+                        <img src="{{listing.house_pic}}" class="card-img-top picSize" alt="housepic" />
+                        <!-- <span class="badge text-bg-danger priceTag"><span>&#x20A6;</span>{{listing.}}</span> -->
+                    </div>
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">Scouted By:{{listing.scout.user.username}}</h5>
+                        <h5 class="card-title">Area:{{listing.area_name}}</h5>
+                        <h5 class="card-title">Listing Status: {{listing.status}}</h5>
+                        <p class="card-text">In An Estate?:{{listing.in_estate}}</p>
+                        <p class="card-text">Estate:{{listing.estate_name}}</p>
+                        <p class="card-text">Street Name:{{listing.street}}</p>
+                        <p class="card-text">House Number:{{listing.house_number}}</p>
+                        <p class="card-text">Banner On House:{{listing.banner_on_house}}</p>
+                        
+                        {% if listing.banner_pic %}
+                            <h5>Banner Pic:</h5>
+                            <img src="{{listing.banner_pic}}" class="card-img-top picSize" alt="bannerpic" />
+                        {% endif %}
+
+                        {% if listing.manager_name != "" %}
+                            <p class="card-text">Manager Name:{{listing.manager_name}}</p>
+                            <p class="card-text">Manager Tel:{{listing.manager_tel}}</p>
+                        {% endif %}
+
+                        {% if listing.owner_name is not None %}
+                            <p class="card-text">Owner Name:{{listing.owner_name}}</p>
+                            <p class="card-text">Owner Tel:{{listing.owner_tel}}</p>
+                        {% endif %}
+                        <div>
+                            <button onclick="handleAccept(
+                                '{{listing.id}}',
+                                '{{listing.area_name}}',
+                                '{{listing.status}}',
+                                '{{listing.in_estate}}',
+                                '{{listing.estate_name}}',
+                                '{{listing.street}}',
+                                '{{listing.house_number}}',
+                                '{{listing.manager_name}}',
+                                '{{listing.manager_tel}}',
+                                '{{listing.owner_name}}',
+                                '{{listing.owner_tel}}'
+                            )" class="btn btn-primary">Accept</button>
+                            <button onclick="handleReject('{{listing.id}}')" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectListingModal">Reject</button>
+                        </div>  
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+        {% else %}
+            <h2 class="mt-5 m-auto">Oops...There are no Scouted Properties at the moment</h2>
+            
+        {% endif %}
+        </div>
+
+        <div id="acceptForm">
+            
+            <h3>New Property Form</h3>
+            <form id="propForm" method="post" enctype="multipart/form-data" action="/role/listingspecialist">
+                {% csrf_token %}
+
+                <!-- Property Owner Information -->
+                <h4>Property Owner Information</h4>
+                <div>
+                    <label class="form-label" for="landlordReg">Is the property owner a registered Property Owner?</label>
+                    <select class="form-select" name="landlord_reg" id="landlordReg" required>
+                        <option selected>Select an option</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>     
+                </div>
+
+
+                <div id="ownerSelectDiv">
+                    <p class="fs-3 form-text">If property owner is registered, select the property owner below:</p>
+                    <select class="form-select" id="selectOwnerOwner" name="landlord">
+                        
+                        <!-- <option>Select a Property Owner</option> -->
+
+                        {% for owners in prop_owners_list %}
+                        <option value="{{owners.id}}">Id:{{owners.id}},Username:{{owners.username}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                
+                <!-- if no get register a new propertyowner and connect the property owner to this prop-->
+                <!-- if yes dropdown of names of property owners to select from -->
+
+                <!-- Register New PropertyOwnerUser -->
+                <div id="regNewPropOwnerDiv">
+                    <p class="fs-3">If property owner is NOT registered, register a new property owner User</p>
+                    <!-- <div>
+                        <label>Marital Status(Required):</label>
+                        <select name="maritalStatus" id="ownerMaritalStatus">
+                            <option>Select Marital Status</option>
+                            <option value="s">Single</option>
+                            <option value="m">Married</option>
+                        </select>
+                    </div> -->
+
+                    <!-- <div>
+                        <label>Date of Birth(Required):</label>
+                        <input type="date" name="dob" id="dob"/>
+                    </div> -->
+
+
+                    <!-- <div>
+                        <label>Id Type(Required):</label>
+                    
+                        <input type="radio" name="idtype" id="intlpassport" value="intlpassport" required>
+                        <label for="intlpassport">Int'l Passport</label>
+                        <input type="radio" name="idtype" id="driverlicense" value="driverlicense">
+                        <label for="driverlicense">Driver's License</label>
+                        <input type="radio" name="idtype" id="nationalid" value="nationalid">
+                        <label for="nationalid">National ID Card</label>
+                        <input type="radio" name="idtype" id="votercard" value="votercard">
+                        <label for="votercard">Voter's Card</label>                
+                    </div> -->
+
+                    <!-- <div>
+                        <label>Government Id(Required):</label>
+                        <input type="file" name="govt_id" id="govtid" />
+                    </div> -->
+
+                    <!-- <div>
+                        <p>Bank Details</p>
+                        <label for="bankname">Bank Name(required):</label>
+                        <input type="text" name="bank_name" id="bankname" />
+                        <label for="accountno">Account Number(required)</label>
+                        <input type="text" name="bank_acct_num" id="accountno" />
+                    </div> -->
+
+                    
+                    <!-- <div>
+                        <p>Where does the landlord currently reside?</p>
+                        <label for="state">State of residence(required):</label>
+                        <input type="text" name="state" id="state" />
+                        <label for="lga">Local Government Area of residence(required):</label>
+                        <input type="text" name="lga" id="lga" />
+                        <label for="area">Area of residence(required):</label>
+                        <input type="text" name="area_name" id="area" />
+                        <label for="estatename">Estate Name(optional):</label>
+                        <input type="text" name="estate_name" id="estatename" />
+                        <label for="street">Street Name(required):</label>
+                        <input type="text" name="street" id="street" />
+                        <label for="housenumber">House Number(required):</label>
+                        <input type="text" name="house_number" id="housenumber" />
+                    </div> -->
+
+
+                </div>
+
+                <h4>Property Manager Information</h4>
+                <div class="mb-3">
+                    <label class="form-label" for="propManagerReg">Is the property Manager a registered Property Manager?</label>
+                    <select class="form-select" name="prop_manager_reg" id="propManagerReg" >
+                        <option selected>Select an option</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+
+                <div id="managerSelectDiv" class="mb-3">
+                    <p class="fs-3 form-text">If property manager is registered, select the property manager below:</p>
+                    <select class="form-select id="selectManager" name="manager">
+                        <!-- <option>Select a Property Manager</option> -->
+                        {% for managers in prop_managers_list %}
+                        <option value="{{managers.id}}">Id:{{managers.id}},Username:{{managers.username}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- if prop manager is not registered, a new property manager is created and connected to this property-->
+                <!-- if yes dropdown of names of property managers to select from -->
+                
+                <!-- Register New PropertyManagerUser -->
+                <div id="regNewPropManagerDiv" class="mb-3">
+                    <p class="fs-3 form-text">If property manager is NOT registered, register a new property manager User</p>
+                
+                    <div>
+                        <label class="form-label">Date of Birth(Required):</label>
+                        <input class="form-control" type="date" name="dobman" id="dobMan" />
+                    </div>
+                
+                
+                    <div class="mb-3">
+                        <label class="form-label">Id Type(Required):</label>
+                
+                        <input class="form-control" type="radio" name="idtypeman" id="intlpassportMan" value="intlpassport" >
+                        <label class="form-label" for="intlpassport">Int'l Passport</label>
+                        <input class="form-control" type="radio" name="idtypeman" id="driverlicenseMan" value="driverlicense">
+                        <label class="form-label" for="driverlicense">Driver's License</label>
+                        <input class="form-control" type="radio" name="idtypeman" id="nationalidMan" value="nationalid">
+                        <label class="form-label" for="nationalid">National ID Card</label>
+                        <input class="form-control" type="radio" name="idtypeman" id="votercardMan" value="votercard">
+                        <label class="form-label" for="votercard">Voter's Card</label>
+                    </div>
+                
+                    <div class="mb-3">
+                        <label class="form-label">Government Id(Required):</label>
+                        <input class="form-control" type="file" name="govt_idman" id="govtidMan" />
+                    </div>
+                
+                    <div class="mb-3">
+                        <p>Bank Details</p>
+                        <label class="form-label" for="bankname">Bank Name(required):</label>
+                        <input class="form-control" type="text" name="bank_nameman" id="banknameMan" />
+                        <label class="form-label" for="accountno">Account Number(required)</label>
+                        <input class="form-control" type="text" name="bank_acct_numman" id="accountnoMan" />
+                    </div>
+                
+                
+                    <div class="mb-3">
+                        <p class="form-text">Company Details</p>
+                        <label class="form-label" for="companyName">Company Name(required):</label>
+                        <input class="form-control" type="text" name="company_name" id="companyName" />
+                        <label class="form-label" for="companyAddress">Company Address(required):</label>
+                        <input class="form-control" type="text" name="company_address" id="companyAddress" />
+                        <label class="form-label" for="position">Position(required):</label>
+                        <input class="form-control" type="text" name="position" id="position" />
+                    </div>
+      
+                </div>
+
+                <h4>Property Information</h4>
+                <input class="form-control" id="scoutedPropertyId" type="number" name="scouted_prop_id" hidden />
+                <div class="mb-3">
+                    <label class="form-label" for="rentSale">For Rent/Sale/Shortlet</label> 
+                    <select class="form-select" name="rent_sale" id="rentSale" required>
+                        <option selected>Select an option</option>
+                        <option value="rent">For Rent</option>
+                        <option value="sale">For Sale</option>
+                        <option value="shortlet">For Shortlet</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">House Type:</label>
+                    <select class="form-select" name="type_of_house" id="typeOfHouse">
+                        <option selected>Select an option</option>
+                        <option value="flat">Flat/Apartment</option>
+                        <option value="house">House</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Bedrooms:</label>
+                    <select class="form-select" name="bed" id="bed">
+                        <option selected>select</option>
+                        <option value="1 bed">1 bed</option>
+                        <option value="2 bed">2 bed</option>
+                        <option value="3 bed">3 bed</option>
+                        <option value="4 bed">4 bed</option>
+                        <option value="5 bed">5 bed</option>
+                        <option value="6+ bed">6+ bed</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Price:</label>
+                    <input class="form-control" type="number" name="price" id="price" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Compound size(sqm):</label>
+                    <input class="form-control " type="number" name="compound_size" id="compoundSize" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Interior size(sqm):</label>
+                    <input class="form-control" type="number" name="interior_size" id="interiorSize" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Property Location:</label>
+                    <select class="form-select" name="location" id="locationSelect">
+                        <!-- <option value="">Select a location</option> -->
+                        {% for loc in location_obj %}
+                        <option value="{{loc.location_id}}">{{loc.location_id}}-{{loc.location_area}} - {{loc.estate_name}} - {{loc.street}}</option>
+                        {% endfor %}
+                        <option value="abx">Location not in list</option>
+                    </select>
+                </div>
+
+                <div id="manualLocationDiv">
+                    <p class="form-text">If location not in list above, create a new location</p>
+                    <div class="mb-3">
+                        <label class="form-label" for="state">State:</label>
+                        <input class="form-control" type="text" value="lagos" disabled />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="lga">Local Government Area:</label>
+                        <input class="form-control" type="text" value="ibeju-lekki" disabled />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="area">Area:</label>
+                        <input class="form-control" type="text" value="awoyaya" disabled />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="inEstate">Is the property in an estate?</label>
+                        <select class="form-select" name="in_estate" id="inEstate">
+                            <option selected>Select an option</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    <div id="estateNameDiv" class="mb-3">
+                        <label class="form-label" for="estateName">If yes above, Estate Name:</label>
+                        <input class="form-control" type="text" name="estate_name" id="estateNameProp" placeholder="type the estate name" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="streetProp">Street Name:</label>
+                        <input class="form-control" type="text" name="street_prop" id="streetProp" placeholder="type the street name here" />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="houseNumber">House no.:</label>
+                    <input class="form-control" type="text" name="house_number_prop" id="houseNumberProp" placeholder="house number" />
+                </div>
+                
+
+                <div class="mb-3">
+                    <label class="form-label" for="intVid">Upload Interior Video</label>
+                    <input class="form-control" type="file" name="int_vid" id="intVid" accept="video/*" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="compoundVid">Upload Compound Video</label>
+                    <input class="form-control" type="file" name="ext_vid" id="compoundVid" accept="video/*" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="streetVid">Upload Street Video</label>
+                    <input class="form-control" type="file" name="street_vid" id="streetVid" />
+                </div>
+
+
+
+                <h4>Electricity Information</h4>
+
+                <div class="mb-3">
+                    <label class="form-label" for="electricity">Average Electricity Supply per day</label>
+                    <input class="form-control" type="number" name="avg_supply_per_day" id="electricity" required />
+                </div>     
+
+
+                <input class="btn btn-primary" type="submit" id="newListingSubmitButton" value="submit" />
+                <!-- <button type="submit" id="submitButton">Submit</button> -->
+                
+            </form>
+        
+        </div>
+
+        <!-- all properties accepted by the signed in listing specialist -->
+        <div id="listingSpecialistProperties">
+            <h3>Active and Accepted Scouted Properties</h3>
+
+            {% if current_listing_sp_properties %}
+
+                {% for prop in current_listing_sp_properties %}
+
+                    <div class="card listingCard mx-3 my-3"  style="width: 18rem;height: 400px;">
+                    <!-- class="card-img-top picSize" alt="houseIntVid" -->
+                        <div class="vidCont" data-propertyId="{{prop.id}}">
+                            <!-- <video  autoplay  width="300px" controls>
+                                <source src="{{prop.int_vid}}" type="video/mp4" />
+                            </video> -->
+
+                            <video id="video-{{prop.id}}" src="{{prop.int_vid}}" muted loop autoplay></video>
+                            <video src="{{prop.int_vid}}" class="video-preview" muted></video>
+
+
+                            <!-- <div class="video-preview"></div> -->
+                            
+                        </div>
+                    
+                        <div class="card-body">
+                            <h5 class="card-title">Area:{{prop.prop_location.area_name}}</h5>
+                            {% if prop.is_active %}
+                            <h5 class="card-title">Active Status: True</h5>
+                            {% else %}
+                            <h5 class="card-title">Active Status: False</h5>
+                            {% endif %}
+                    
+                            <p class="card-text">{{prop.prop_location.estate_name}}</p>
+                            <p class="card-text">{{prop.prop_location.street}}</p>
+                        </div>
+                    </div>
+
+
+                {% endfor %}
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- modal for rejecting a property -->
+        <div class="modal fade" id="rejectListingModal" aria-hidden="true" aria-labelledby="rejectListingToggleLabel"
+            tabindex="-1">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-3" id="exampleModalToggleLabel4">Reject this property</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="rejectPropertyForm" method="post" 
+                            enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div>
+                                <label class="form-label" for="reason_for_rejection">Why is this property rejected?</label>
+                                <textarea class="form-control" type="text" name="reason_for_rejection" id="reason_for_rejection" required></textarea>
+                            </div>
+        
+                            <!-- <input id="rejection_formSubmitButton" type="submit" value="Submit" /> -->
+                            <div class="modal-footer">
+                                <input type="submit" class="btn btn-primary" id="rejectPropetySubmit" value="Submit" />
+                            </div>
+                        </form>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        <p class="fs-5"> You cannot view this page because are not a verified Listing Specialist. </p>
+        
+    {% endif %}
+    
+
+{% endblock %}
+

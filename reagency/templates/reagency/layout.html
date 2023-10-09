@@ -1,0 +1,130 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Making Real Estate agency easy for everyone" />
+    <meta name="author" content="Olufemi"/>
+    <title>{% block title %}Ampeer{% endblock %}</title>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <link href="{% static 'reagency/styles.css' %}" rel="stylesheet">
+
+    
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-dark border-bottom border-bottom-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand " href="{% url 'index' %}">
+                <span>
+                    <bold>Ampeer</bold>
+                </span>
+                <span class="badge bg-primary">.com</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 mx-5" style="color: white;">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Home</a>
+                    </li>
+
+                    {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Partner
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" href="{% url 'scout_role' %}">Partner as a Scout</a></li>
+                                <li><a class="dropdown-item" href="{% url 'listing_specialist' %}">Partner as a Listing Specialist</a></li>
+                                <li><a class="dropdown-item" href="{% url 'property_manager' %}">Partner as a Property Manager</a></li>
+                                <li><a class="dropdown-item" href="{% url 'property_owner' %}">Partner as a Property Owner</a></li>
+
+                        </ul>
+                    </li>
+                    {% endif %}
+
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'properties_paid' %}">My Locked Properties<span id="numOfLikesSpan" class="badge text-bg-primary bg-secondary">{{paidPropertyNum}}</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'liked_properties' %}">Liked Properties<span id="numOfLikesSpan" class="badge text-bg-primary bg-secondary">{{savedPropertyNum}}</span></a>
+                    </li>
+                    {% endif %}
+                </ul>
+
+                {% if user.is_authenticated %}
+
+                <span class="badge text-bg-danger"><a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                    <span>Signed in as <strong>{{ user.username }}</strong></span></span>
+                {% else %}
+                <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                <a class="nav-link" href="{% url 'register' %}">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div style="margin-top: 30px;">
+
+
+    </div>
+
+    <!-- <div id="carouselExample" class="carousel slide">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="{% static 'images/konganew1.webp' %}" class="d-block w-100" alt="banner6">
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'images/konga5.webp' %}" class="d-block w-100" alt="banner2">
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'images/konganew2.webp' %}" class="d-block w-100" alt="banner3">
+            </div>
+
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div> -->
+
+    <hr>
+    <div>
+        {% block body %}
+        {% endblock %}
+    </div>
+
+    <!-- <footer>
+        <div class="footer">
+            <div class="footer-content">
+                <a class="navbar-brand " href="{% url 'index' %}">
+                    <span>
+                        <bold>Ampeer</bold>
+                    </span>
+                    <span class="badge bg-primary">.com</span>
+                </a>
+                <p><span>&#169;2023</span>All rights reserved</p>
+            </div>
+
+        </div>
+    </footer> -->
+
+</body>
+
+</html>

@@ -1,0 +1,124 @@
+{% extends "reagency/layout.html" %}
+{% load static %}
+
+
+{% block title %}My Locked Properties{% endblock %}
+
+
+{% block body %}
+<h4 class="mt-5">My Locked Properties</h4>
+<h4>You have successfully locked these properties and it is only partially visible to other users.</h4>
+
+
+{% if all_properties_paid %}
+
+    {% for property in all_properties_paid %}
+    <div class="card listingCard mx-3 my-3" style="width: 18rem;height: 400px;" data-bs-target="#propertyVideos" data-bs-toggle="modal" data-propertyId="{{property.id}}" >
+
+        <div class="vidCont" >
+            <video id="video-{{property.id}}" src="{{property.int_vid}}" muted loop autoplay></video>
+            <video src="{{property.int_vid}}" class="video-preview" muted></video>
+            <video id="extVideo-{{property.id}}" src="{{property.ext_vid}}" hidden></video>
+            <video id="streetVideo-{{property.id}}" src="{{property.street_vid}}" hidden></video>
+        </div>
+
+        <div hidden>
+            <p id="propertyBed">{{property.bed}}</p>
+            <p id="propertyType">{{property.type}}</p>
+            <p id="propertyRentSale">{{property.rent_sale}}</p>
+            <p id="propertyHouseNumber">{{property.house_number}}</p>
+            <p id="propertyStreet">{{property.prop_location.street}}</p>
+            <p id="propertyEstateName">{{property.prop_location.estate_name}}</p>
+            <p id="propertyAreaName">{{property.prop_location.area_name}}</p>
+            <p id="propertyPrice">{{property.price}}</p>
+        </div>
+
+        <div class="card-body">
+            <h5 class="card-title">Area:{{property.prop_location.area_name}}</h5>
+            <!-- {% if not prop.is_active %}
+                    <h5 class="card-title">This property is not active to the general public. Only you can view this property</h5>
+                    {% endif %} -->
+
+            <p class="card-text">Estate:{{property.prop_location.estate_name}}</p>
+            <p class="card-text">Street:{{property.prop_location.street}}</p>
+            <span class="priceTag badge text-bg-danger">Price:<span>&#x20A6;</span>{{property.price}}</span>
+        </div>
+
+    </div>
+
+    <!-- Modal for displaying videos -->
+    <div class="modal fade" id="propertyVideos" data-bs-keyboard="false" tabindex="-1" aria-labelledby="propertyVideosLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header video-select-container">
+                    <div class="d-flex flex-column">
+                        <p class="modal-title fs-3" id="propertyVideosLabel1"></p>
+                        <p class="modal-title fs-3" id="propertyVideosLabel2"></p>
+                        <h4 class="modal-title fs-3" id="propertyVideosLabel3"></h4>
+                    </div>
+
+
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+
+                    <div class="current-video">
+                        <div class="d-flex flex-row justify-content-between mx-auto video-select" style="height: 80px;">
+                            <div class="card mx-auto" id="interiorCard"
+                                style="width: 150px; height: 90%; background: none;">
+                                <p
+                                    style="z-index: 10; font-weight: 700;line-height: 0.5; width: max-content; font-size: 16px;">
+                                    Interior Video</p>
+                                <video id="videoIntSelect" muted></video>
+                            </div>
+                            <div class="card mx-auto" id="compoundCard" style="width: 150px; height: 90%;">
+                                <p
+                                    style="z-index: 10; font-weight: 700; line-height: 0.5; width: max-content; font-size: 16px;">
+                                    Compound Video</p>
+                                <video id="videoCompSelect" muted></video>
+                            </div>
+                            <div class="card mx-auto" id="streetCard" style="width: 150px; height: 90%;">
+                                <p
+                                    style="z-index: 10; font-weight: 700; line-height: 0.5; width: max-content;font-size: 16px;">
+                                    Street Video</p>
+                                <video id="videoStreetSelect" muted></video>
+                            </div>
+
+                        </div>
+
+                        <video id="mainVideoDisplay" style="display: block;" loop autoplay controls></video>
+
+
+                    </div>
+
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <!-- User cannot pay again for a property they have already locked. -->
+                    <!-- <button id="paymentButton" type="button" class="btn btn-primary" data-bs-target="#makePayment"
+                        onclick="makePayment()" data-bs-toggle="modal">Make Payment for this property</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+
+{% else %}
+    <h2 class="mt-5 m-auto">Oops...You do not have any property locked at the moment.</h2>
+{% endif %}
+
+
+
+    {% block script %}
+        <!-- <script> var propertiesData = {{ all_properties_paid_json|safe }};</script> -->
+        <script src="{% static 'reagency/propertiespaid.js' %}"></script>
+    {% endblock %}
+
+{% endblock %}

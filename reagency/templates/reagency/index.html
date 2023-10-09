@@ -1,0 +1,1056 @@
+{% extends "reagency/layout.html" %}
+{% load static %}
+
+
+{% block body %}
+
+{% block script %}
+    <script src="https://checkout.flutterwave.com/v3.js"></script>
+    <script src="{% static 'reagency/index.js' %}"></script>
+{% endblock %}
+    
+
+    <!-- {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="{{message.tags}}">
+                    {{message}}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %} -->
+
+    {% if messages %}
+        <div class="alert alert-success d-flex justify-content-center" role="alert" style="width: 100%;">
+            <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Success:">
+                <use xlink:href="#check-circle-fill" />
+            </svg>
+            {% for message in messages %}
+            <div>{{message}}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+
+    <div class="mt-5 mx-auto firstDiv">
+        <div>
+          <h3>You can Partner with Ampeer and make money in 4 different ways</h3>
+        </div>
+
+        <div class="d-flex flex-row justify-content-evenly flex-wrap">
+            <!-- Scout Card -->
+            <div class="card mt-3" style="width: 400px;">
+                <h4>Scout</h4>
+                <span class="card-text" style="font-size: 12px;">Make money by letting us know the property available for rent. Take a 30
+                    seconds or less video of a property available for rent or sale in your neighborhood.</span>
+                <!-- Button trigger modal -->
+                <!-- if the user is not signed in, he shouldnt be able to learn more and register -->
+                {% if user.is_authenticated %}
+                    <span><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Learn More</button></span>      
+                {% else %}
+                    
+                <!-- Button trigger modal If user is not signed IN OR Registered-->
+                    <span>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalUserNotSignedIn">
+                        Learn More</button>
+                    </span>
+                
+                    <!-- Modal if User is not signed In or Registered  -->
+                    <div class="modal fade" id="modalUserNotSignedIn" data-bs-keyboard="false" tabindex="-1"
+                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Sign-In/Register</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    You need to log-in or register to learn more.
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="" onclick="window.location.href='{% url 'register' %}'">Register</button>
+                                    <button type="button" class="btn btn-primary" onclick="window.location.href='{% url 'login' %}'">Log In</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Listing Specialist Card -->
+            <div class="card mt-3" style="width: 400px;">
+                <h4>Listing Specialist</h4>
+                <span style="font-size: 12px;">As a listing specialist, you will undergo a 2-week intensive training by our experts to capture property listings. Requirements to become a listing specialist is demanding but also rewarding.</span>
+                <!-- Button trigger modal -->
+                <!-- if the user is not signed in, he shouldn't be able to learn more and register -->
+                {% if user.is_authenticated %}
+                <span><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#listingSpecialist">Learn More</button></span>
+                {% else %}
+                <!-- Button trigger modal If user is not signed IN OR Registered-->
+                <span>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalUserNotSignedIn">
+                        Learn More</button>
+                </span>
+                {% endif %}
+            </div>
+
+            <!-- Property Manager Card -->
+            <div class="card mt-3" style="width: 400px;">
+                <h4>Property Manager</h4>
+                <span style="font-size: 12px;"> We partner with property managers to help them rent or sell the property they manage fast at no cost while
+                    also making a better profit.</span>
+                <!-- Button trigger modal -->
+                <!-- if the user is not signed in, he shouldnt be able to learn more and register -->
+                {% if user.is_authenticated %}
+                <span><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#propertyManager">Learn More</button></span>
+                {% else %}
+                <!-- Button trigger modal If user is not signed IN OR Registered-->
+                <span>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalUserNotSignedIn">
+                        Learn More</button>
+                </span>
+                {% endif %}
+            </div>
+
+            <!-- Property Owner Card -->
+            <div class="card mt-3" style="width: 400px;">
+                <h4>Property Owner</h4>
+                <span style="font-size: 12px;"> We partner with property owner to help them rent or sell their property fast at no cost.</span>
+                <!-- Button trigger modal -->
+                <!-- if the user is not signed in, he shouldnt be able to learn more and register -->
+                {% if user.is_authenticated %}
+                <span><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#propertyOwner">Learn
+                        More</button></span>
+                {% else %}
+                <!-- Button trigger modal If user is not signed IN OR Registered-->
+                <span>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalUserNotSignedIn">Learn More</button>
+                </span>
+                {% endif %}
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- Modal for Scout more Information, -->
+    <div class="modal fade" id="staticBackdrop"
+         data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-3" id="staticBackdropLabel">Become a Scout</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card mx-auto" style="width: 50%; height: 200px;">
+                        Animation
+                    </div>
+                    As a scout, you can make money by letting us know the property available for rent. Make money by taking a 30
+                    seconds (or less) video of a property available for rent or sale in your neighborhood.
+                    <div class="mt-3">
+                        <p class="fs-4">Payment</p>
+                        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam,
+                        eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam</p>
+
+                    </div>
+                    <div class="mt-3">
+                        <p class="fs-4">FAQ</p>
+                        <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti
+                        quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia
+                        deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam
+                        libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere
+                        possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut
+                        rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic
+                        tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
+                        asperiores repellat</p>
+                    </div>
+                    <div class="mt-3">
+                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam,
+                        eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam
+                        voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione
+                        voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,
+                        sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima
+                        veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis
+                        autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem
+                        eum fugiat quo voluptas nulla pariatur?"
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Register as a Scout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Second modal for registering as a scout -->
+    <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-3" id="exampleModalToggleLabel2">Register as a Scout</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Tell us more about yourself
+                    
+                    <form id="scoutform" method="post" action="{% url 'registerscout' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div>
+                            <label class="form-label" for="dob">Date of Birth:</label>
+                            <input class="form-control" type="date" name="dob" id="dob" required />
+                        </div>
+                        <div>
+                            <label class="form-label" for="maritalStatus">Marital Status</label>
+                            <select class="form-select" name="maritalStatus" id="maritalStatus" required >
+                                <option selected value="s">single</option>
+                                <option value="m">married</option>
+                            </select>
+                        </div>
+                        
+                        <p class="form-text mt-3">Please upload a means of identification</p>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="idtype" id="intlpassport" value="intlpassport" required>
+                            <label class="form-check-label" for="intlpassport">Int'l Passport</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="idtype" id="driverlicense" value="driverlicense">
+                            <label class="form-check-label" for="driverlicense">Driver's License</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="idtype" id="nationalid" value="nationalid">
+                            <label class="form-check-label" for="nationalid">National ID Card</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="idtype" id="votercard" value="votercard">
+                            <label class="form-check-label" for="votercard">Voter's Card</label>
+                        </div>
+                            
+                        <div>
+                            <input class="form-control" type="file" name="govt_id" id="govtid" required/> 
+                        </div>
+                        <div>
+                            <p>Where do you currently reside?</p>
+                            <label class="form-label" for="state">State:</label>
+                            <input class="form-control" type="text" name="state" id="state" value="lagos" disabled/>
+                            <label class="form-label" for="lga">Local Government Area:</label>
+                            <input class="form-control" type="text" name="lga" id="lga" value="ibeju-lekki" disabled />
+                            <label class="form-label" for="area">Area:</label>
+                            <input class="form-control" type="text" name="area" id="area" value="awoyaya" disabled />
+                            <label class="form-label" for="estatename">Estate Name:</label>
+                            <input class="form-control" type="text" name="estate_name" id="estatename" />
+                            <label class="form-label" for="street">Street Name:</label>
+                            <input class="form-control" type="text" name="street" id="street" required/>
+                            <label class="form-label" for="housenumber">House Number:</label>
+                            <input class="form-label" type="text" name="house_number" id="housenumber" required />
+                        </div>
+
+                        <div>
+                            <p>Bank Details</p>
+                            <label class="form-label" for="bankname">Bank Name</label>
+                            <input class="form-control" type="text" name="bankname" id="bankname" required />
+                            <label class="form-label" for="accountno">Account No.</label>
+                            <input class="form-control" type="text" name="accountno" id="accountno" required />
+                        </div>
+                        
+                        <input class="form-control" id="formSubmitButton" type="submit" value="Submit" hidden/>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-target="#staticBackdrop" data-bs-toggle="modal">Back</button>
+                    <button class="btn btn-primary" id="scoutsubmit" >Register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- Modal for Listing Specialist more Information, -->
+    <div class="modal fade" id="listingSpecialist" data-bs-keyboard="false" tabindex="-1" aria-labelledby="listingSpecialistLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-3" id="listingSpecialistLabel">Become a Listing Specialist</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card mx-auto" style="width: 50%; height: 200px;">
+                        Animation
+                    </div>
+                    As a listing specialist, you can make money by taking property listings and uploading it on Ampeer. Make money by taking property listings that meets or standard. You will go through a 2-week intensive training before being certified as a listing specialist.
+                    <div class="mt-3">
+                        <p class="fs-4">Payment</p>
+                        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,
+                            totam rem aperiam,
+                            eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt
+                            explicabo. Nemo enim ipsam</p>
+                    </div>
+                    <div class="mt-3">
+                        <p class="fs-4">FAQ</p>
+                        <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+                            deleniti atque corrupti
+                            quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt
+                            in culpa qui officia
+                            deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et
+                            expedita distinctio. Nam
+                            libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod
+                            maxime placeat facere
+                            possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et
+                            aut officiis debitis aut
+                            rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non
+                            recusandae. Itaque earum rerum hic
+                            tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut
+                            perferendis doloribus
+                            asperiores repellat</p>
+                    </div>
+                    <div class="mt-3">
+                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,
+                        totam rem aperiam,
+                        eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+                        Nemo enim ipsam
+                        voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos
+                        qui ratione
+                        voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
+                        consectetur, adipisci velit,
+                        sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat
+                        voluptatem. Ut enim ad minima
+                        veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea
+                        commodi consequatur? Quis
+                        autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur,
+                        vel illum qui dolorem
+                        eum fugiat quo voluptas nulla pariatur?"
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-bs-target="#listingSpecialistModal2"
+                        data-bs-toggle="modal">Register as a Listing Specialist</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Second modal for registering as a listing specialist -->
+    <div class="modal fade" id="listingSpecialistModal2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-3" id="exampleModalToggleLabel2">Register as a Listing Specialist</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Tell us more about yourself
+
+                    <form id="listingSpecialistForm" method="post" action="{% url 'registerlistingspecialist' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div>
+                            <label class="form-label" for="dob">Date of Birth:</label>
+                            <input class="form-control" type="date" name="dob" id="dob" required />
+                        </div>
+                        <div>
+                            <label class="form-label" for="maritalStatus">Marital Status</label>
+                            <select class="form-select" name="maritalStatus" id="maritalStatus" required>
+                                <option selected value="s">single</option>
+                                <option value="m">married</option>
+                            </select>
+                        </div>
+
+                        <p class="form-text">Please upload a means of identification</p>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="idtype" id="intlpassport" value="intlpassport" required>
+                            <label class="form-check-label" for="intlpassport">Int'l Passport</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="idtype" id="driverlicense" value="driverlicense">
+                            <label class="form-check-label" for="driverlicense">Driver's License</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="idtype" id="nationalid" value="nationalid">
+                            <label class="form-check-label" for="nationalid">National ID Card</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="idtype" id="votercard" value="votercard">
+                            <label class="form-check-label" for="votercard">Voter's Card</label>
+                        </div>
+                        
+                        <div>
+                            <input class="form-control" type="file" name="govt_id" id="govtid" required />
+                        </div>
+                        <div>
+                            <p class="form-text">Where do you currently reside?</p>
+                            <label class="form-label" for="state">State:</label>
+                            <input class="form-control" type="text" name="state" id="state" value="lagos" disabled />
+                            <label class="form-label" for="lga">Local Government Area:</label>
+                            <input class="form-control" type="text" name="lga" id="lga" value="ibeju-lekki" disabled />
+                            <label class="form-label" for="area">Area:</label>
+                            <input class="form-control" type="text" name="area" id="area" value="awoyaya" disabled />
+                            <label class="form-label" for="estatename">Estate Name:</label>
+                            <input class="form-control" type="text" name="estate_name" id="estatename" />
+                            <label class="form-label" for="street">Street Name:</label>
+                            <input class="form-control" type="text" name="street" id="street" required />
+                            <label class="form-label" for="housenumber">House Number:</label>
+                            <input class="form-control" type="text" name="house_number" id="housenumber" required />
+                        </div>
+    
+                        <div>
+                            <p>Bank Details</p>
+                            <label class="form-label" for="bankname">Bank Name</label>
+                            <input class="form-control" type="text" name="bankname" id="bankname" required />
+                            <label class="form-label" for="accountno">Account No.</label>
+                            <input type="text" name="accountno" id="accountno" required />
+                        </div>
+
+                        <div>
+                            <p>Emergency Contact Details</p>
+                            <label class="form-label" for="emergencycontactname">Emergency Contact Name:</label>
+                            <input class="form-control" type="text" name="emergency_contact_name" id="emergencycontactname" required />
+                            <label class="form-label" for="emergencycontactaddress">Emergency Contact Address:</label>
+                            <input class="form-control" type="text" name="emergency_contact_address" id="emergencycontactaddress" required />
+                            <label class="form-label" for="emergencycontactphone">Emergency Contact Phone:</label>
+                            <input class="form-control" type="text" name="emergency_contact_phone" id="emergencycontactphone" required />
+                            <label class="form-label" for="emergencycontactemail">Emergency Contact email:</label>
+                            <input class="form-control" type="email" name="emergency_contact_email" id="emergencycontactemail" required />
+                        </div>
+    
+                        <input id="listingSpecialist_formSubmitButton" type="submit" value="Submit" hidden />
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-target="#listingSpecialistModal2" data-bs-toggle="modal">Back</button>
+                    <button class="btn btn-primary" id="listingSpecialistSubmit">Register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- Modal for Property Manager more Information, -->
+    <div class="modal fade" id="propertyManager" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="propertyManagerLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-3" id="propertyManagerLabel">Sell More, Earn More as a Property Manager</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card mx-auto" style="width: 50%; height: 200px;">
+                        Animation
+                    </div>
+                    When you sign-up as a property manager with Ampeer, you get to make more money and sell/rent the properties you manage faster. 
+                    <div class="mt-3">
+                        <p class="fs-4">Payment</p>
+                        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,
+                            totam rem aperiam,
+                            eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt
+                            explicabo. Nemo enim ipsam</p>
+                    </div>
+                    <div class="mt-3">
+                        <p class="fs-4">FAQ</p>
+                        <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+                            deleniti atque corrupti
+                            quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt
+                            in culpa qui officia
+                            deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et
+                            expedita distinctio. Nam
+                            libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod
+                            maxime placeat facere
+                            possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et
+                            aut officiis debitis aut
+                            rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non
+                            recusandae. Itaque earum rerum hic
+                            tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut
+                            perferendis doloribus
+                            asperiores repellat</p>
+                    </div>
+                    <div class="mt-3">
+                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,
+                        totam rem aperiam,
+                        eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+                        Nemo enim ipsam
+                        voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos
+                        qui ratione
+                        voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
+                        consectetur, adipisci velit,
+                        sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat
+                        voluptatem. Ut enim ad minima
+                        veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea
+                        commodi consequatur? Quis
+                        autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur,
+                        vel illum qui dolorem
+                        eum fugiat quo voluptas nulla pariatur?"
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-bs-target="#propertyManagerModal3"
+                        data-bs-toggle="modal">Register as a Property Manager</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Second modal for registering as a Property Manager -->
+    <div class="modal fade" id="propertyManagerModal3" aria-hidden="true" aria-labelledby="exampleModalToggleLabel3"
+        tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-3" id="exampleModalToggleLabel3">Register as a Property Manager</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+    
+                    <form id="propertyManagerForm" method="post" action="{% url 'registerpropertymanager' %}"
+                        enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div>
+                            <label class="form-label" for="dob">Date of Birth:</label>
+                            <input class="form-control" type="date" name="dob" id="dob" required />
+                        </div>
+                        
+                        <p class="form-text mt-3">Please select and upload a means of identification</p>
+                        <div class="form-check">    
+    
+                            <input class="form-check-input" type="radio" name="idtype" id="intlpassport" value="intlpassport" required>
+                            <label class="form-check-label" for="intlpassport">Int'l Passport</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="idtype" id="driverlicense" value="driverlicense">
+                            <label class="form-check-label" for="driverlicense">Driver's License</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="idtype" id="nationalid" value="nationalid">
+                            <label class="form-check-label" for="nationalid">National ID Card</label>
+                        </div>  
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="idtype" id="votercard" value="votercard">
+                            <label class="form-check-label" for="votercard">Voter's Card</label>
+                        </div>  
+                            
+                        <div>
+                            <input class="form-control" type="file" name="govt_id" id="govtid" required />
+                        </div>
+                            
+                        <p class="form-text mt-3">Company Details</p>
+                        <div>
+                            <label class="form-label" for="companyName">Company Name:</label>
+                            <input class="form-control" type="text" name="company_name" id="companyName" />
+                            <label class="form-label" for="companyAddress">Company Address:</label>
+                            <input class="form-control" type="text" name="company_address" id="companyAddress" />
+                            <label class="form-label" for="position">Position:</label>
+                            <input class="form-control" type="text" name="position" id="position" />
+                        </div>
+    
+                        <p class="form-text mt-3">Bank Details</p>
+                        <div>
+                            <label class="form-label" for="bankname">Bank Name</label>
+                            <input class="form-control" type="text" name="bankname" id="bankname" required />
+                            <label class="form-label" for="accountno">Account No.</label>
+                            <input class="form-control" type="text" name="accountno" id="accountno" required />
+                        </div>
+    
+                        <input id="propertyManager_formSubmitButton" type="submit" value="Submit" hidden />
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-target="#propertyManager"
+                        data-bs-toggle="modal">Back</button>
+                    <button class="btn btn-primary" id="propertyManagerSubmit">Register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- Modal for Property Owner more Information, -->
+    <div class="modal fade" id="propertyOwner" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="propertyOwnerLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-3" id="propertyOwnerLabel">Maximize your Return On Investment as a Property Owner</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card mx-auto" style="width: 50%; height: 200px;">
+                        Animation
+                    </div>
+                    When you sign-up as a property owner with Ampeer, you get to make more money when you rent your property or sell with Ampeer
+                    <div class="mt-3">
+                        <p class="fs-4">Payment</p>
+                        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,
+                            totam rem aperiam,
+                            eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt
+                            explicabo. Nemo enim ipsam</p>
+                    </div>
+                    <div class="mt-3">
+                        <p class="fs-4">FAQ</p>
+                        <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+                            deleniti atque corrupti
+                            quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt
+                            in culpa qui officia
+                            deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et
+                            expedita distinctio. Nam
+                            libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod
+                            maxime placeat facere
+                            possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et
+                            aut officiis debitis aut
+                            rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non
+                            recusandae. Itaque earum rerum hic
+                            tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut
+                            perferendis doloribus
+                            asperiores repellat</p>
+                    </div>
+                    <div class="mt-3">
+                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,
+                        totam rem aperiam,
+                        eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+                        Nemo enim ipsam
+                        voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos
+                        qui ratione
+                        voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
+                        consectetur, adipisci velit,
+                        sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat
+                        voluptatem. Ut enim ad minima
+                        veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea
+                        commodi consequatur? Quis
+                        autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur,
+                        vel illum qui dolorem
+                        eum fugiat quo voluptas nulla pariatur?"
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-bs-target="#propertyOwnerModal4"
+                        data-bs-toggle="modal">Register as a Property Owner</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Second modal for registering as a Property Manager -->
+    <div class="modal fade" id="propertyOwnerModal4" aria-hidden="true" aria-labelledby="exampleModalToggleLabel4"
+        tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-3" id="exampleModalToggleLabel4">Register as a Property Owner</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Tell us more about yourself
+    
+                    <form id="propertyOwnerForm" method="post" action="{% url 'registerpropertyowner' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div>
+                            <label class="form-label" for="dob">Date of Birth:</label>
+                            <input class="form-control" type="date" name="dob" id="dob" required />
+                        </div>
+
+                        <div>
+                            <label class="form-label" for="maritalStatus">Marital Status</label>
+                            <select class="form-select" name="maritalStatus" id="maritalStatus" required>
+                                <option selected value="s">single</option>
+                                <option value="m">married</option>
+                            </select>
+                        </div>
+    
+                            
+                        <p class="form-text">Please upload a means of identification</p>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="idtype" id="intlpassport" value="intlpassport" required>
+                            <label class="form-check-label" for="intlpassport">Int'l Passport</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="idtype" id="driverlicense" value="driverlicense">
+                            <label class="form-check-label" for="driverlicense">Driver's License</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="idtype" id="nationalid" value="nationalid">
+                            <label class="form-check-label" for="nationalid">National ID Card</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="idtype" id="votercard" value="votercard">
+                            <label class="form-check-label" for="votercard">Voter's Card</label>
+                        </div>
+                            
+                        <div>
+                            <input class="form-control" type="file" name="govt_id" id="govtid" required />
+                        </div>
+                        <div>
+                            <p>Where do you currently reside?</p>
+                            <label class="form-label" for="state">State:</label>
+                            <input class="form-control" type="text" name="state" id="state" required />
+                            <label class="form-label" for="lga">Local Government Area:</label>
+                            <input class="form-control" type="text" name="lga" id="lga" required />
+                            <label class="form-label" for="area">Area:</label>
+                            <input class="form-control" type="text" name="area" id="area" required />
+                            <label class="form-label" for="estatename">Estate Name:</label>
+                            <input class="form-control" type="text" name="estate_name" id="estatename" />
+                            <label class="form-label" for="street">Street Name:</label>
+                            <input class="form-control" type="text" name="street" id="street" required />
+                            <label class="form-label" for="housenumber">House Number:</label>
+                            <input class="form-control" type="text" name="house_number" id="housenumber" required />
+                        </div>
+
+                        <div>
+                            <p>Emergency Contact Details</p>
+                            <label class="form-label" for="emergencycontactname">Emergency Contact Name:</label>
+                            <input class="form-control" type="text" name="emergency_contact_name" id="emergencycontactname" required />
+                            <label class="form-label" for="emergencycontactaddress">Emergency Contact Address:</label>
+                            <input class="form-control" type="text" name="emergency_contact_address" id="emergencycontactaddress" required />
+                            <label class="form-label" for="emergencycontactphone">Emergency Contact Phone:</label>
+                            <input class="form-control" type="text" name="emergency_contact_phone" id="emergencycontactphone" required />
+                            <label class="form-label" for="emergencycontactemail">Emergency Contact email:</label>
+                            <input class="form-control" type="email" name="emergency_contact_email" id="emergencycontactemail" required />
+                        </div>
+    
+                        <div>
+                            <p>Bank Details</p>
+                            <label class="form-label" for="bankname">Bank Name</label>
+                            <input class="form-control" type="text" name="bankname" id="bankname" required />
+                            <label class="form-label" for="accountno">Account No.</label>
+                            <input class="form-control" type="text" name="accountno" id="accountno" required />
+                        </div>
+    
+                        <input id="propertyOwner_formSubmitButton" type="submit" value="Submit" hidden />
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-target="#propertyOwner" data-bs-toggle="modal">Back</button>
+                    <button class="btn btn-primary" id="propertyOwnerSubmit">Register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div style="margin-top: 20px;">
+        <div style="margin-bottom: 30px;">
+            <h3>Where would you like to Live?</h3>
+        </div>
+        <form id="propertySearchForm" class="d-flex flex-row flex-wrap" >
+            
+            <select name="rent" id="rentSale" style="width: 100px;">
+                <option selected value="rent">Rent</option>
+                <option value="shortlet">Shortlet</option>
+                <option value="sale">Buy</option>
+            </select>
+            
+            <div class="address-search">
+                <input class="" id="location-input" type="text" placeholder="where will you like to live?" autocomplete="off" style="width: 280px; padding: 6px; font-size: 18px; border-radius: 6px;"/>
+                <!-- <select id="location-select"></select> -->
+                <input name="loc" id="hiddenLocationValue" hidden/>
+                <div class="location-dropdown">
+                    <ul id="location-select"></ul>
+                </div>
+
+            </div>
+            <span>
+                <span>
+                    <select name="type_of_house" id="typeOfHouse">
+                        <option selected value="">All Types</option>
+                        <option value="flat">Flat</option>
+                        <option value="house">House</option>
+                    </select>
+                
+                    <select class="" name="bed" id="bed">
+                        <option selected value="">Any</option>
+                        <option value="1 bed">1 bed</option>
+                        <option value="2 bed">2 bed</option>
+                        <option value="3 bed">3 bed</option>
+                        <option value="4 bed">4 bed</option>
+                        <option value="5 bed">5 bed</option>
+                        <option value="6+ bed">6+ bed</option>
+                    </select>
+                </span>
+                
+                <span id="rentPriceSpan">
+                    <select class="" name="min" id="minPriceRent">
+                        <option selected value="0">No minimum</option>
+                        <option value="300000"><span>&#8358;</span>300,000</option>
+                        <option value="500000"><span>&#8358;</span>500,000</option>
+                        <option value="1000000"><span>&#8358;</span>1,000,000</option>
+                        <option value="3000000"><span>&#8358;</span>3,000,000</option>
+                        <option value="5000000"><span>&#8358;</span>5,000,000</option>
+                        <option value="5000000"><span>&#8358;</span>10,000,000</option>
+                    </select>
+                    <select class="" name="max" id="maxPriceRent">
+                        <option selected value="1000000000000">No maximum</option>
+                        <option value="300000"><span>&#8358;</span>300,000</option>
+                        <option value="500000"><span>&#8358;</span>500,000</option>
+                        <option value="1000000"><span>&#8358;</span>1,000,000</option>
+                        <option value="3000000"><span>&#8358;</span>3,000,000</option>
+                        <option value="5000000"><span>&#8358;</span>5,000,000</option>
+                        <option value="10000000"><span>&#8358;</span>10,000,000</option>
+                    </select>
+                </span>
+                
+                <span id="shortletPriceSpan">
+                    <select class="" name="min" id="minPriceShortlet">
+                        <option selected value="0">No minimum</option>
+                        <option value="5000"><span>&#8358;</span>5,000</option>
+                        <option value="10000"><span>&#8358;</span>10,000</option>
+                        <option value="15000"><span>&#8358;</span>15,000</option>
+                        <option value="20000"><span>&#8358;</span>20,000</option>
+                        <option value="30000"><span>&#8358;</span>30,000</option>
+                        <option value="50000"><span>&#8358;</span>50,000</option>
+                        <option value="70000"><span>&#8358;</span>70,000</option>
+                        <option value="80000"><span>&#8358;</span>80,000</option>
+                        <option value="100000"><span>&#8358;</span>100,000</option>
+                        <option value="120000"><span>&#8358;</span>120,000</option>
+                        <option value="150000"><span>&#8358;</span>150,000</option>
+                        <option value="200000"><span>&#8358;</span>200,000</option>
+                    </select>
+                
+                    <select class="" name="max" id="maxPriceShortlet">
+                        <option selected value="0">No maximum</option>
+                        <option value="5000"><span>&#8358;</span>5,000</option>
+                        <option value="10000"><span>&#8358;</span>10,000</option>
+                        <option value="15000"><span>&#8358;</span>15,000</option>
+                        <option value="20000"><span>&#8358;</span>20,000</option>
+                        <option value="30000"><span>&#8358;</span>30,000</option>
+                        <option value="50000"><span>&#8358;</span>50,000</option>
+                        <option value="70000"><span>&#8358;</span>70,000</option>
+                        <option value="80000"><span>&#8358;</span>80,000</option>
+                        <option value="100000"><span>&#8358;</span>100,000</option>
+                        <option value="120000"><span>&#8358;</span>120,000</option>
+                        <option value="150000"><span>&#8358;</span>150,000</option>
+                        <option value="200000"><span>&#8358;</span>200,000</option>
+                    </select>
+                </span>
+                
+                <span id="salePriceSpan">
+                    <select class="" name="min" id="minPriceBuy">
+                        <option selected value="0">No minimum</option>
+                        <option value="10000000"><span>&#8358;</span>10,000,000</option>
+                        <option value="15000000"><span>&#8358;</span>15,000,000</option>
+                        <option value="20000000"><span>&#8358;</span>20,000,000</option>
+                        <option value="30000000"><span>&#8358;</span>30,000,000</option>
+                        <option value="40000000"><span>&#8358;</span>40,000,000</option>
+                        <option value="50000000"><span>&#8358;</span>50,000,000</option>
+                        <option value="70000000"><span>&#8358;</span>70,000,000</option>
+                        <option value="80000000"><span>&#8358;</span>80,000,000</option>
+                        <option value="100000000"><span>&#8358;</span>100,000,000</option>
+                    </select>
+                
+                    <select class="" name="max" id="maxPriceBuy">
+                        <option selected value="0">No maximum</option>
+                        <option value="10000000"><span>&#8358;</span>10,000,000</option>
+                        <option value="15000000"><span>&#8358;</span>15,000,000</option>
+                        <option value="20000000"><span>&#8358;</span>20,000,000</option>
+                        <option value="30000000"><span>&#8358;</span>30,000,000</option>
+                        <option value="40000000"><span>&#8358;</span>40,000,000</option>
+                        <option value="50000000"><span>&#8358;</span>50,000,000</option>
+                        <option value="70000000"><span>&#8358;</span>70,000,000</option>
+                        <option value="80000000"><span>&#8358;</span>80,000,000</option>
+                        <option value="100000000"><span>&#8358;</span>100,000,000</option>
+                    </select>
+                </span>
+            </span>
+            
+            
+
+            
+    
+            <input type="submit" value="submit" class="btn btn-primary" />
+    
+        </form>
+    </div>
+
+    <div id="userSearchedProperties"></div>
+
+
+    <!-- Modal for displaying videos -->
+    <div class="modal fade" id="propertyVideos" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="propertyVideosLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header video-select-container">
+                    <div class="d-flex flex-column">
+                        <p class="modal-title fs-3" id="propertyVideosLabel1"></p>
+                        <p class="modal-title fs-3" id="propertyVideosLabel2"></p>
+                        <h4 class="modal-title fs-3" id="propertyVideosLabel3"></h4>
+                    </div>
+
+                    
+                    
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    
+
+                    <div class="current-video">
+                        <div class="d-flex flex-row justify-content-between mx-auto video-select" style="height: 80px;">
+                            <div class="card mx-auto" id="interiorCard" style="width: 150px; height: 90%; background: none;">
+                                <p style="z-index: 10; font-weight: 700;line-height: 0.5; width: max-content; font-size: 16px;">Interior Video</p>
+                                <video id="videoIntSelect" muted></video>
+                            </div>
+                            <div class="card mx-auto" id="compoundCard" style="width: 150px; height: 90%;">
+                                <p style="z-index: 10; font-weight: 700; line-height: 0.5; width: max-content; font-size: 16px;">Compound Video</p>
+                                <video id="videoCompSelect" muted></video> 
+                            </div>
+                            <div class="card mx-auto" id="streetCard" style="width: 150px; height: 90%;">
+                                <p style="z-index: 10; font-weight: 700; line-height: 0.5; width: max-content;font-size: 16px;">Street Video</p>
+                                <video id="videoStreetSelect" muted></video>
+                            </div>
+
+                        </div>
+
+                        <video id="mainVideoDisplay" style="display: block;" loop autoplay controls></video>
+
+                    
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="paymentButton" type="button" class="btn btn-primary"  data-bs-target="#makePayment" data-bs-toggle="modal">Deposit 10% to lock this property from other users</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<!-- like and unlike functionality. Append to id=userSearchedProperties -->
+
+    <!-- {{allPropertiesLiked}} -->
+
+    <!-- <div id="likeUnlike" class="flex-row justify-content-between mt-5" style="display: none;">
+        
+        <!- Like or Unlike a Property if user is authenticated 
+        {% if user.is_authenticated %}
+    
+        <div class="d-flex flex-row align-items-center justify-content-between text-muted" style="width: 35px;">
+            <!- check if post is already liked. if yes, show the filled love image else show the unfilled love image 
+            {% if post.id in allPropertiesLiked %}
+            <span class="unlike" style="cursor: pointer;" id="like_{{post.id}}"
+                onclick="handleImageLikeUnlike({{post.id}}, {{allPostsLiked}})"></span>
+            <!- src="{% static 'images/loved.svg' %}" 
+            {% else %}
+    
+            <!- no 
+            <span class="like" style="cursor: pointer;" id="like_{{post.id}}"
+                onclick="handleImageLikeUnlike({{post.id}}, {{allPostsLiked}})"></span>
+            <!- src="{% static 'images/love.svg' %}" -
+            {% endif %}
+    
+    
+        </div>
+    
+        {% else %}
+        <div class="d-flex flex-row align-items-center justify-content-between text-muted" style="width: 35px;">
+             check if post is already liked. if yes, show the filled love image else show the unfilled love image 
+            {% if post.id in allPostsLiked %}
+            <span class="unlike" style="cursor: pointer;" id="like_{{post.id}}"
+                onclick="window.alert('You have to sign in to unlike')"></span>
+            src="{% static 'images/loved.svg' %}" -
+            {% else %}
+    
+            <no -
+            <span class="like" style="cursor: pointer;" id="like_{{post.id}}"
+                onclick="window.alert('You have to sign in to like')"></span>
+             src="{% static 'images/love.svg' %}" 
+            {% endif %}
+    
+            <span id="likeSpan">
+                <span id="numOfLikes" class="font-weight-light " style="font-size: 18px" ;>
+                    {{post.number_of_likes}}
+                </span>
+            </span>
+        </div> -->
+    
+        {% endif %}
+    
+    
+    </div>
+
+
+
+    <!-- <div id="listingSpecialistProperties">
+
+        {% if all_properties %}
+        
+        {% if all_properties|length > 0 %}
+        {% with first_property=all_properties.0 %}
+        {% if first_property.rent_sale == "rent" %}
+        <h1>Properties for rent in {{first_property.prop_location.area_name}}</h1>
+        {% elif first_property.rent_sale == "shortlet" %}
+        <h1>Properties for shortlet in {{first_property.prop_location.area_name}}</h1>
+        {% else %}
+        <h1>Properties for sale in {{first_property.prop_location.area_name}}</h1>
+        {% endif %}
+        {% endwith %}
+        {% endif %}
+        
+            {% for property in all_properties %}
+            {% if property.is_active %}
+            
+            <div class="card listingCard mx-3 my-3" style="width: 18rem;height: 400px;">
+                
+
+
+                <div class="vidCont" data-propertyId="{{property.id}}">
+                    <video id="video-{{property.id}}" src="{{property.int_vid}}" muted loop autoplay></video>
+                    <video src="{{property.int_vid}}" class="video-preview" muted></video>
+            
+            
+                </div>
+            
+                <div class="card-body">
+                    <h5 class="card-title">Area:{{property.prop_location.area_name}}</h5>
+                    <p class="card-text">{{property.prop_location.estate_name}}</p>
+                    <p class="card-text">{{property.prop_location.street}}</p>
+                    <strong><p class="card-text">{{property.price}}</p></strong>
+
+
+                </div>
+            </div>
+
+            {% endif %}
+            {% endfor %}
+        {% endif %} 
+
+    </div> -->
+
+    <!-- all active properties posted by all listing specialists -->
+
+    <!-- {% for listing in listings %}
+    
+    <div class="card listingCard mx-3 my-3" style="width: 18rem;height: 400px;">
+
+        <span class="badge text-bg-danger priceTag"><span>&#x20A6;</span>{{listing.current_bid}}</span>
+    
+        <div class="imageCont">
+            <img src="{{listing.listing_img}}" class="card-img-top picSize" alt="{{listing.title}}" />
+            <span class="badge text-bg-danger priceTag"><span>&#x20A6;</span>{{listing.current_bid}}</span>
+        </div>
+    
+        <div class="card-body">
+            <h5 class="card-title">{{listing.title}}</h5>
+            <p class="card-text">{{listing.description}}</p>
+             <p>posted by: {{listing.user.username}}</p> 
+            <p>Units available: {{listing.quantity}}</p>
+            <a href="{% url 'listing' listing.id %}" class="btn btn-primary">See details</a>
+        </div>
+    </div>
+    {% endfor %} -->
+
+
+    
+
+{% endblock %}
+

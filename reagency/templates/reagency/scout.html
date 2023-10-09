@@ -1,0 +1,295 @@
+{% extends "reagency/layout.html" %}
+{% load static %}
+
+{% block title %}Scout{% endblock %}
+
+
+{% block body %}
+{% block script %}
+    <script src="{% static 'reagency/scout.js' %}"></script>
+{% endblock %}
+
+
+
+{% if messages %}
+<div class="alert alert-success d-flex justify-content-center" role="alert" style="width: 100%;">
+    <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Success:">
+        <use xlink:href="#check-circle-fill" />
+    </svg>
+    {% for message in messages %}
+    <div>{{message}}</div>
+    {% endfor %}
+</div>
+{% endif %}
+
+
+<div class="scoutedListing">
+    <h4>Scouted</h4>
+</div>
+
+<div>
+
+    <button class="btn btn-sm btn-outline-primary" id="new">Create New Property</button>
+    <button class="btn btn-sm btn-outline-primary" id="pending">Pending Properties</button>
+    <button class="btn btn-sm btn-outline-primary" id="active">Active Properties</button>
+    <button class="btn btn-sm btn-outline-primary" id="sold">Rented/Sold Properties</button>
+    <button class="btn btn-sm btn-outline-primary" id="rejected">Rejected Properties</button>
+
+</div>
+
+
+<!-- New Listing -->
+{% if message %}
+    <div class="alert alert-success d-flex justify-content-center" role="alert" style="width: 100%;">
+        <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Success:">
+            <use xlink:href="#check-circle-fill" />
+        </svg>
+        <div>{{message}}</div>
+    </div>
+{% endif %}
+<div id="newDiv">
+    <!-- In the future, there will be a sample of what is accepted and what is not, also FAQ -->
+    <h3>Post a New Scouted Property</h3>
+    <form id="scoutnewlisting" method="post" action="{% url 'scout_role' %}" enctype="multipart/form-data" class="">
+        {% csrf_token %}
+        <!-- For location -->
+        <div>
+            <div class="mb-3">
+                <label for="state" class="form-label">State:</label>
+                <input type="text" name="state" id="state" value="lagos" class="form-control" disabled />
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="lga">Local Government Area:</label>
+                <input type="text" name="lga" id="lga" value="ibeju-lekki" class="form-control" disabled />
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="area">Area:</label>
+                <input class="form-control" type="text" name="area" id="area" value="awoyaya" disabled />
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="inEstate">Is the property in an estate?</label>
+                <select class="form-select" name="in_estate" id="inEstate">
+                    <option selected>Select an option</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <div id="estateNameDiv" class="mb-3">
+                <label class="form-label" for="estateName">If yes above, Estate Name:</label>
+                <input class="form-control" name="estate_name" id="estateName" placeholder="type the estate name"/>
+                
+                <!-- <select name="estate_name" id="estate_name">
+                    <option>Select an Estate</option>
+                    {% for estate in location_estate %}
+                    <option value="{{estate}}">{{estate}}</option>  
+                    {% endfor %}
+                    <option value="other">Other</option>
+                </select> -->
+                <!-- <div id="estatename">
+                    <label for="estatename2">If Other (if estate name is not found in the list above), type the estate name here:</label>
+                    <input type="text" name="estate_name2" id="estatename2" />
+                </div> -->
+                
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="street">Street Name:</label>
+                <input class="form-control" name="street" id="street" placeholder="type the street name here" required />
+                <!-- <select name="street" id="street">
+                    <option>Select a Street</option>
+                    {% for street in location_street %}
+                    <option value="{{street}}">{{street}}</option>
+                    {% endfor %}
+                    <option value="other">Other</option>
+                </select> -->
+                <!-- <div id="streetdiv">
+                    <label for="street2">If Other (if street name is not found in the list above), type the street name here:</label>
+                    <input type="text" name="street2" id="street2" />
+                </div>  -->
+            </div>
+    
+            <div class="mb-3">
+                <label class="form-label" for="housenumber">House Number:</label>
+                <input class="form-control" type="text" name="house_number" id="housenumber" required />
+            </div>
+               
+        </div>
+        <!-- For banner -->
+        <div class="mb-3">
+            <label class="form-label" for="banner">Is there a banner in front of the house?</label>
+            <select class="form-select" name="banner_on_house" id="banner" required>
+                <option selected>Select an option</option>
+                <option value="yes">Yes, there is a banner</option>
+                <option value="no">No, there is no banner</option>
+            </select>
+        </div>
+        <div id="ownerManagerDiv">
+            <p class="form-text">If you have selected "No, there is no banner", please provide the property owner OR property manager name and phone number</p>
+
+            <!-- <p>Whose detail do you have?</p>
+            
+                <input name="propManagerOwner" type="checkbox" id="propManager" value="Property Manager" checked/>
+                <label for="propManager">Property Manager</label>
+
+                <input name="propManagerOwner" type="checkbox" id="propOwner" value="Property Owner" />
+                <label for="propOwner">Property Owner</label> -->
+
+            <div id="propManagerDiv">
+                <div class="mb-3">
+                    <label class="form-label" for="managerName">Property Manager Name (required):</label>
+                    <input class="form-control" type="text" name="manager_name" id="managerName" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="managerTel">Property Manager Telephone (required):</label>
+                    <input class="form-control" type="text" name="manager_tel" id="managerTel" required />
+                </div>
+            </div>
+
+            <div id="propOwnerDiv">
+                <div class="mb-3">
+                    <label class="form-label" for="ownerName">Property Owner Name:</label>
+                    <input class="form-control" type="text" name="owner_name" id="ownerName" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="ownerTel">Property Owner Telephone:</label>
+                    <input class="form-control" type="text" name="owner_tel" id="ownerTel" />
+                </div>
+            </div>
+            
+        </div>
+        <div id="uploadDiv" class="mb-3">
+            <p class="form-text">If you have selected "Yes, there is banner", please upload the picture of the banner</p>
+            <label class="form-label" for="bannerpic">Upload Banner pic</label>
+            <input class="form-control" type="file" name="banner_pic" id="bannerpic" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="housepic">Upload the House picture</label>
+            <input class="form-control" type="file" name="house_pic" id="housepic" required />
+        </div>
+
+        <input id="formSubmitInput" type="submit" value="submit" class="btn btn-primary" />
+    </form>
+</div>
+
+
+<!-- Scout Listed Properties Pending -->
+<div id="pendingDiv">
+    <h3>Pending Scouted Properties</h3>
+    {% for listing in pending_properties %}
+            
+        <div class="card listingCard mx-3 my-3" style="width: 18rem;height: 400px;">
+            <div>
+                <bold><p>House Picture</p></bold>
+            </div>
+            <div class="imageCont">
+                <img src="{{listing.house_pic}}" class="card-img-top picSize" alt="housepic" />
+                <!-- <span class="badge text-bg-danger priceTag"><span>&#x20A6;</span>{{listing.}}</span> -->
+            </div>
+        
+            <div class="card-body">
+                <h5 class="card-title">{{listing.area_name}}</h5>
+                <p class="card-title">Listing Status: {{listing.status}}</p>
+
+                <p class="card-text">{{listing.estate_name}}</p>
+                <p class="card-text">{{listing.street}}</p>
+               
+            </div>
+        </div>
+    {% endfor %}
+
+</div>
+
+
+<!-- Scout Listed Properties Active -->
+<div id="activeDiv">
+    <h3>Active Scouted Properties</h3>
+    {% for listing in active_properties %}
+
+    <div class="card listingCard mx-3 my-3" style="width: 18rem;height: 400px;">
+        <div>
+            <bold>
+                <p>House Picture</p>
+            </bold>
+        </div>
+        <div class="imageCont">
+            <div>
+                <bold><p>House Picture</p></bold>
+            </div>
+            <img src="{{listing.house_pic}}" class="card-img-top picSize" alt="housepic" />
+            <!-- <span class="badge text-bg-danger priceTag"><span>&#x20A6;</span>{{listing.}}</span> -->
+        </div>
+
+        <div class="card-body">
+            <h5 class="card-title">{{listing.location.area_name}}</h5>
+            <p class="card-title">Listing Status: {{listing.status}}</p>
+
+            <p class="card-text">{{listing.location.estate_name}}</p>
+            <p class="card-text">{{listing.location.estate_name2}}</p>
+            <p class="card-text">{{listing.location.street}}</p>
+            <p class="card-text">{{listing.location.street2}}</p>
+
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+
+<!-- Scout Listed Properties Rented -->
+<div id="soldDiv">
+    <h3>Rented/Sold Scouted Properties</h3>
+    {% for listing in sold_properties %}
+
+    <div class="card listingCard mx-3 my-3" style="width: 18rem;height: 400px;">
+
+        <div class="imageCont">
+            <div><bold><p>House Picture:</p></bold></div>
+            <img src="{{listing.house_pic}}" class="card-img-top picSize" alt="housepic" />
+            <!-- <span class="badge text-bg-danger priceTag"><span>&#x20A6;</span>{{listing.}}</span> -->
+        </div>
+
+        <div class="card-body">
+            <h5 class="card-title">{{listing.location.area_name}}</h5>
+            <h5 class="card-title">Listing Status: {{listing.status}}</h5>
+
+            <p class="card-text">{{listing.location.estate_name}}</p>
+            <p class="card-text">{{listing.location.estate_name2}}</p>
+            <p class="card-text">{{listing.location.street}}</p>
+            <p class="card-text">{{listing.location.street2}}</p>
+
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+
+<!-- Scout Listed Properties Rejected -->
+<div id="rejectedDiv">
+    <h3>Rejected Scouted Properties</h3>
+    {% for listing in rejected_properties %}
+
+    <div class="card listingCard mx-3 my-3" style="width: 18rem;height: 400px;">
+
+        <div class="imageCont">
+            <img src="{{listing.house_pic}}" class="card-img-top picSize" alt="housepic" />
+            <!-- <span class="badge text-bg-danger priceTag"><span>&#x20A6;</span>{{listing.}}</span> -->
+        </div>
+
+        <div class="card-body">
+            <h5 class="card-title">{{listing.location.area_name}}</h5>
+            <h5 class="card-title">Listing Status: {{listing.status}}</h5>
+            <p class="card-text">{{listing.reason_for_rejection}}</p>
+
+            <p class="card-text">{{listing.location.estate_name}}</p>
+            <p class="card-text">{{listing.location.estate_name2}}</p>
+            <p class="card-text">{{listing.location.street}}</p>
+            <p class="card-text">{{listing.location.street2}}</p>
+
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+{% endblock %}

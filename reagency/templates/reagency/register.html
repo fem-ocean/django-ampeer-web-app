@@ -1,0 +1,51 @@
+{% extends "reagency/layout.html" %}
+
+{% block body %}
+
+<h2>Register</h2>
+
+{% if message %}
+<div>{{ message }}</div>
+{% endif %}
+
+<form action="{% url 'register' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <input class="form-control" autofocus type="text" name="username" placeholder="Username">
+    </div>
+    <div class="form-group">
+        <input class="form-control" type="email" name="email" placeholder="Email Address">
+    </div>
+    <div class="form-group">
+        <input class="form-control" type="password" name="password" placeholder="Password">
+    </div>
+    <div class="form-group">
+        <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
+    </div>
+    <div class="form-group">
+        <input class="form-control" type="text" name="fname" placeholder="First Name">
+    </div>
+    <div class="form-group">
+        <input class="form-control" type="text" name="lname" placeholder="Last Name">
+    </div>
+    <div class="form-group">
+        <input class="form-control" type="number" name="tel" placeholder="Telephone" >
+    </div>
+    <div class="form-group">
+        <input class="form-control" type="number" name="alt_tel" placeholder="Alternative Telephone">
+    </div>
+    <div class="form-group">
+        <select name="gender">
+            <option value="m">Male</option>
+            <option value="f">Female</option>
+        </select>
+    </div>
+
+    <p>Upload profile pic: <input type="file" name="profile_pic"/></p>
+
+    <input class="btn btn-primary" type="submit" value="Register">
+</form>
+
+Already have an account? <a href="{% url 'login' %}">Log In here.</a>
+
+{% endblock %}
